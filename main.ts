@@ -7,11 +7,21 @@
 //     from the peak (TRAIL_BELOW_PEAK 0.985), whichever comes first.
 //   - Long only, max 1 open position, fully deterministic, no wall clock,
 //     no network, max_slippage_bps 100.
-// Measured dev score (grade-local --driver process, this round's dev window):
-//   net PnL +$19.84, 1 round trip, win rate 1.00, maxDD 1.07%.
-//   PASSES the dev gate (PnL > $0). The previous round's pullback bot
-//   scores $0.00 (0 trades) on this window — it does not transfer, because
-//   this window is a -4.91% downtrend and the pullback never triggers.
+//
+// Tuning (grade-local --driver process, this round's dev window, -4.91%):
+//   - This bot (DIP 0.006, TP 1.02, trail 0.985): net PnL +$19.84,
+//     1 round trip, win rate 1.00, maxDD 1.07%. PASSES the dev gate.
+//   - Same bot with TP 1.015: +$14.04. TP 1.018: +$15.58. TP 1.02 is the
+//     best of the plateau (TP 1.02 wins because the hour-7 bounce runs
+//     ~2% from the dip entry).
+//   - The previous round's pullback bot scores $0.00 (0 trades) here —
+//     it does not transfer, because this window is a steep downtrend and
+//     the pullback-from-high never triggers.
+//   - A bounce bot (buy a cross above the 20-bar mean, TP 1.006) looked
+//     good in a Python backtest (+$8.40) but grade-local says -$4.42:
+//     the real fill cost is ~20 bps/side (fee 4 + slippage 2 + pool
+//     impact ~14), so a 0.6% TP leaves almost nothing after costs.
+//     A 2.0% TP is wide enough to survive the fill cost. Do not tighten it.
 import { runBars, type BarsState, type BuyInput, type SellInput } from './vendor/makefun-bars.ts';
 const SYMBOL = 'CBBTC';
 const MEAN_BARS = 10;
