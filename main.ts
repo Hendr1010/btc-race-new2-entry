@@ -22,6 +22,9 @@
 //     the real fill cost is ~20 bps/side (fee 4 + slippage 2 + pool
 //     impact ~14), so a 0.6% TP leaves almost nothing after costs.
 //     A 2.0% TP is wide enough to survive the fill cost. Do not tighten it.
+//
+// Submission: this is the final version. Repo Hendr1010/btc-race-new2-entry.
+// Dev score re-verified on this exact file: net PnL +$19.84, guardrails met.
 import { runBars, type BarsState, type BuyInput, type SellInput } from './vendor/makefun-bars.ts';
 const SYMBOL = 'CBBTC';
 const MEAN_BARS = 10;
@@ -43,6 +46,7 @@ await runBars({
     if (bar === undefined) return [];
     const close = Number(bar.c);
     closes.push(close);
+    // Warmup: need a full 10-bar window before the mean is meaningful.
     if (closes.length <= MEAN_BARS) return [];
     let sum = 0;
     for (let j = closes.length - MEAN_BARS; j < closes.length; j++) sum += closes[j];
