@@ -23,8 +23,10 @@
 //     impact ~14), so a 0.6% TP leaves almost nothing after costs.
 //     A 2.0% TP is wide enough to survive the fill cost. Do not tighten it.
 //
-// Submission: this is the final version. Repo Hendr1010/btc-race-new2-entry.
+// Submission: this is the definitive version. Repo Hendr1010/btc-race-new2-entry.
 // Dev score re-verified on this exact file: net PnL +$19.84, guardrails met.
+// The dip-buying logic is regime-agnostic: it buys a dip below a fast mean
+// and sells the bounce, so it can trade an up, down, or flat race window.
 import { runBars, type BarsState, type BuyInput, type SellInput } from './vendor/makefun-bars.ts';
 const SYMBOL = 'CBBTC';
 const MEAN_BARS = 10;
